@@ -3,7 +3,7 @@ require 'mail_autoconfig'
 describe MailAutoconfig::EmailAddress do
 
   context 'example@gmail.com' do
-    let(:address) { MailAutoconfig::EmailAddress.new('example@gmail.com') }
+    let(:address) { MailAutoconfig::for_address('example@gmail.com') }
 
     it 'should have a gmail domain' do
       expect(address.domain).to eq('gmail.com')
@@ -27,14 +27,14 @@ describe MailAutoconfig::EmailAddress do
   end
 
   context 'example@atechmedia.com' do
-    let(:address) { MailAutoconfig::EmailAddress.new('example@atechmedia.com') }
+    let(:address) { MailAutoconfig::for_address('example@atechmedia.com') }
     it 'should not have a detectable configuration' do
       expect(address.client_config).to be_false
     end
   end
 
   context 'example@swcp.com' do
-    let(:address) { MailAutoconfig::EmailAddress.new('example@swcp.com') }
+    let(:address) { MailAutoconfig::for_address('example@swcp.com') }
     it 'should have an autoconf configuration' do
       expect(address.client_config).to be_a(MailAutoconfig::ClientConfig)
     end

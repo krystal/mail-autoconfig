@@ -17,4 +17,8 @@ module MailAutoconfig
     "http://svn.mozilla.org/mozillamessaging.com/sites/autoconfig.mozillamessaging.com/trunk"
   end
 
+  def self.for_address(email)
+    MailAutoconfig::EmailAddress.new(email).client_config
+  end
+
 end
