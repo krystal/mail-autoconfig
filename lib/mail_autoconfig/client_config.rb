@@ -1,6 +1,3 @@
-require 'nokogiri'
-require 'faraday'
-
 module MailAutoconfig
   class ClientConfig
 
@@ -34,9 +31,25 @@ module MailAutoconfig
       @short_name ||= provider.xpath('displayShortName').first.content
     end
 
+    def incoming_servers
+      @incoming_servers ||= provider.xpath('incomingServer').map do |incoming|
+        MailAutoconfig::IncomingServer.new(incoming)
+      end
+    end
+
+    def outgoing_servers
+      @outgoing_servers ||= provider.xpath('outgoingServer').map do |outgoing|
+        MailAutoconfig::OutgoingServer.new(outgoing)
+      end
+    end
+
     class << self
       def from_file(path)
         self.new(File.read(path))
+      end
+
+      def search(domain)
+        search_local_files(domain) || search_autoconfig_domain(domain)
       end
 
       def search_local_files(domain)
@@ -51,10 +64,14 @@ module MailAutoconfig
       def search_autoconfig_domain(domain)
         last_config = false
         match = ["http://autoconfig.#{domain}/mail/config-v1.1.xml", "http://#{domain}/.well-known/autoconfig/mail/config-v1.1.xml"].find do |url|
-          response = Faraday.get(url)
-          if response.status == 200
-            last_config = self.new(response.body)
-          else
+          begin
+            response = Faraday.get(url)
+            if response.status == 200
+              last_config = self.new(response.body)
+            else
+              false
+            end
+          rescue
             false
           end
         end

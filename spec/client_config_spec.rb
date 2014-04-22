@@ -28,6 +28,7 @@ describe MailAutoconfig::ClientConfig do
     it "doesn't match invalid domains" do
       expect(client_config.valid_for_domain?('googlemail.com')).to be(false)
     end
+
   end
 
 
@@ -45,7 +46,5 @@ describe MailAutoconfig::ClientConfig do
     end
   end
 
-
-  
 
 end

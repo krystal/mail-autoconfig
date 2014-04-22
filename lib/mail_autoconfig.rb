@@ -1,11 +1,16 @@
+require 'nokogiri'
+require 'faraday'
+require 'resolv'
+
 require "mail_autoconfig/version"
 require "mail_autoconfig/client_config"
-
+require "mail_autoconfig/server"
+require "mail_autoconfig/email_address"
 
 module MailAutoconfig
 
   def self.local_ispdb_path
-    File.expand_path(File.join(__FILE__, "../", "ispdb_data"))
+    File.expand_path(File.join(__FILE__, "../", "../", "ispdb_data"))
   end
 
   def self.ispdb_svn_url
