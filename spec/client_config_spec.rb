@@ -45,4 +45,7 @@ describe MailAutoconfig::ClientConfig do
     end
   end
 
+
+  
+
 end
