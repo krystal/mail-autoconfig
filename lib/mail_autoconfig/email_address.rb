@@ -2,7 +2,8 @@ module MailAutoconfig
 
   # Email address that we're going to investigate
   class EmailAddress
-    
+    attr_reader :address
+
     # @param address [String] the email address to look up
     def initialize(address)
       @address = address
@@ -19,7 +20,8 @@ module MailAutoconfig
       unless @client_config
         @client_config = MailAutoconfig::ClientConfig.search(primary_mx_domain)
       end
-      
+
+      @client_config.email_address = self if @client_config
       @client_config
     end
 

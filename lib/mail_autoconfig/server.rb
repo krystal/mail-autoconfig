@@ -4,10 +4,12 @@ module MailAutoconfig
   # Never used directly.
   class Server
     attr_reader :config
+    attr_reader :client_config
 
     # @param config [Nokogiri::XML::Node] an XML representation of this server
-    def initialize(config)
+    def initialize(config, client_config)
       @config = config
+      @client_config = client_config
     end
 
     # Returns the protocol of the mail server e.g. `smtp`, `pop3`, `imap`
@@ -32,6 +34,18 @@ module MailAutoconfig
       @socket_type ||= config.xpath('socketType').first.content
     end
 
+    # The username for this mailbox, combines {username_format} and [EmailAddress] details
+    # @return [String] The username
+    def username
+      return @username if @username
+
+      @username = username_format
+      @username.gsub! '%EMAILADDRESS%', client_config.email_address.address
+      @username.gsub! '%EMAILLOCALPART%', client_config.email_address.local_part
+      @username.gsub! '%EMAILDOMAIN%', client_config.email_address.domain
+      @username
+    end
+
     # Return the username format for this server. There are substitutions that can be made.
     #
     # * `%EMAILADDRESS%` - full email address of the user, usually entered by the user
@@ -39,8 +53,8 @@ module MailAutoconfig
     # * `%EMAILDOMAIN%` - email address, part after @
     #
     # @return [String] the username format
-    def username
-      @username ||= config.xpath('username').first.content
+    def username_format
+      @username_format ||= config.xpath('username').first.content
     end
 
     # The authentication type for this server. Valid responses:

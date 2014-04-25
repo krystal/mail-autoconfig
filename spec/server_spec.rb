@@ -28,8 +28,13 @@ describe MailAutoconfig::Server do
         expect(server.socket_type).to eq('SSL')
       end
 
-      it "has a username" do
-        expect(server.username).to eq('%EMAILADDRESS%')
+      it "has a username format" do
+        expect(server.username_format).to eq('%EMAILADDRESS%')
+      end
+
+      it "can process a username from the format" do
+        client_config.email_address = MailAutoconfig::EmailAddress.new('example@gmail.com')
+        expect(server.username).to eq('example@gmail.com')
       end
 
       it "has an authentication method" do
@@ -60,8 +65,13 @@ describe MailAutoconfig::Server do
         expect(server.socket_type).to eq('SSL')
       end
 
-      it "has a username" do
-        expect(server.username).to eq('%EMAILADDRESS%')
+      it "has a username format" do
+        expect(server.username_format).to eq('%EMAILADDRESS%')
+      end
+
+      it "can process a username from the format" do
+        client_config.email_address = MailAutoconfig::EmailAddress.new('example@gmail.com')
+        expect(server.username).to eq('example@gmail.com')
       end
 
       it "has an authentication method" do

@@ -4,6 +4,7 @@ module MailAutoconfig
   class ClientConfig
 
     attr_reader :config
+    attr_accessor :email_address
 
     class << self
       # Build a configuration from the specified path
@@ -93,7 +94,7 @@ module MailAutoconfig
     # @return [Array] list of incoming servers
     def incoming_servers
       @incoming_servers ||= provider.xpath('incomingServer').map do |incoming|
-        MailAutoconfig::IncomingServer.new(incoming)
+        MailAutoconfig::IncomingServer.new(incoming, self)
       end
     end
     
@@ -102,7 +103,7 @@ module MailAutoconfig
     # @return [Array] list of outgoing servers
     def outgoing_servers
       @outgoing_servers ||= provider.xpath('outgoingServer').map do |outgoing|
-        MailAutoconfig::OutgoingServer.new(outgoing)
+        MailAutoconfig::OutgoingServer.new(outgoing, self)
       end
     end
 

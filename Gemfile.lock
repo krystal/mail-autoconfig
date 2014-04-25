@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     mail_autoconfig (0.0.1)
-      faraday (~> 0.9)
+      faraday
       nokogiri (~> 1.6)
 
 GEM
