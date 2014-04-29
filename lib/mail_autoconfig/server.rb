@@ -37,13 +37,13 @@ module MailAutoconfig
     # The username for this mailbox, combines {username_format} and [EmailAddress] details
     # @return [String] The username
     def username
-      return @username if @username
-
-      @username = username_format
-      @username.gsub! '%EMAILADDRESS%', client_config.email_address.address
-      @username.gsub! '%EMAILLOCALPART%', client_config.email_address.local_part
-      @username.gsub! '%EMAILDOMAIN%', client_config.email_address.domain
-      @username
+      @username ||= begin
+        name = username_format
+        name.gsub! '%EMAILADDRESS%', client_config.email_address.address
+        name.gsub! '%EMAILLOCALPART%', client_config.email_address.local_part
+        name.gsub! '%EMAILDOMAIN%', client_config.email_address.domain
+        name
+      end
     end
 
     # Return the username format for this server. There are substitutions that can be made.

@@ -14,15 +14,12 @@ module MailAutoconfig
     # check the domain specified in {#primary_mx_domain}. Returns false if none found.
     # @return [MailAutoconfig::ClientConfig] the client configuration for this address
     def client_config
-      return @client_config if @client_config
-      
-      @client_config = MailAutoconfig::ClientConfig.search(domain)
-      unless @client_config
-        @client_config = MailAutoconfig::ClientConfig.search(primary_mx_domain)
+      @client_config ||= begin
+        config = MailAutoconfig::ClientConfig.search(domain)
+        config ||= MailAutoconfig::ClientConfig.search(primary_mx_domain)
+        config.email_address = self if config
+        config
       end
-
-      @client_config.email_address = self if @client_config
-      @client_config
     end
 
     # The local part of the emai address (before the @ symbol).
@@ -41,7 +38,7 @@ module MailAutoconfig
     # Finds the primary MX domain for this address. Would change gmail-smtp-in.l.google.com to google.com
     # @return [String] the domain of the pimary MX record for this address
     def primary_mx_domain
-      mx_records.first.split(".")[-2..-1].join(".") # Not very nice to 2nd level domains
+      @primary_mx_domain ||= mx_records.first.split(".")[-2..-1].join(".") # Not very nice to 2nd level domains
     end
 
     private
