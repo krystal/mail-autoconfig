@@ -39,4 +39,15 @@ describe MailAutoconfig::EmailAddress do
       expect(address.client_config).to be_a(MailAutoconfig::ClientConfig)
     end
   end
+
+  context 'example@veryunlikelydomain4567763332.com' do
+    let(:address) { MailAutoconfig::EmailAddress.new('example@veryunlikelydomain4567763332.com') }
+    it 'should not return a configuration' do
+      expect(address.client_config).to be_false
+    end
+
+    it 'should not have a primary mx domain' do
+      expect(address.primary_mx_domain).to be_nil
+    end
+  end
 end

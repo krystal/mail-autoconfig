@@ -38,7 +38,10 @@ module MailAutoconfig
     # Finds the primary MX domain for this address. Would change gmail-smtp-in.l.google.com to google.com
     # @return [String] the domain of the pimary MX record for this address
     def primary_mx_domain
-      @primary_mx_domain ||= mx_records.first.split(".")[-2..-1].join(".") # Not very nice to 2nd level domains
+      @primary_mx_domain ||= begin 
+        # Not very nice to 2nd level domains
+        mx_records.first.split(".")[-2..-1].join(".") unless mx_records.empty?
+      end
     end
 
     private
